@@ -10,6 +10,8 @@ class Main_window(QMainWindow):
         super().__init__()
         uic.loadUi("calculator.ui", self)
 
+        self.angle_mode = "degrees"
+
         self.act1.clicked.connect(self.action1)
         self.act2.clicked.connect(self.action2)
         self.act3.clicked.connect(self.action3)
@@ -25,41 +27,71 @@ class Main_window(QMainWindow):
         self.actminus.clicked.connect(self.event_minus)
         self.actmul.clicked.connect(self.event_mul)
         self.actdiv.clicked.connect(self.event_div)
-        self.actdel.clicked.connect(self.event_clear)
         self.acteqal.clicked.connect(self.event_equal)
         self.pl_min.clicked.connect(self.plus_minus)
         self.proc.clicked.connect(self.procent)
         self.actpoint.clicked.connect(self.event_point)
 
+        self.rightbr.clicked.connect(self.event_right_bracket)
+        self.leftbr.clicked.connect(self.event_left_bracket)
+
+        self.actsin.clicked.connect(self.event_sin)
+        self.actcos.clicked.connect(self.event_cos)
+        self.actlog.clicked.connect(self.event_log)
+        self.actln.clicked.connect(self.event_ln)
+
+        self.actdel.clicked.connect(self.event_clear)
+        self.delall.clicked.connect(self.event_clear_all)
+
     def event_equal(self):
         equation = self.label.text()
+        equation = equation.replace("%", "/100")
         try:
-            ans = eval(equation)
-
+            # Переопределяем eval для поддержки математических функций
+            ans = eval(equation, {
+                "sin": lambda x: math.sin(math.radians(x)),
+                "cos": lambda x: math.cos(math.radians(x)),
+                "log": math.log10,
+                "ln": math.log,
+            })
             self.label.setText(str(ans))
         except:
             self.label.setText("ошибка")
 
     def event_plus(self):
-        text = self.label.text()
-        self.label.setText(text + " + ")
+        self.label.setText(self.label.text() + " + ")
 
     def event_minus(self):
-        text = self.label.text()
-        self.label.setText(text + " - ")
+        self.label.setText(self.label.text() + " - ")
 
     def event_mul(self):
-        text = self.label.text()
-        self.label.setText(text + " * ")
+        self.label.setText(self.label.text() + " * ")
 
     def event_div(self):
-        text = self.label.text()
-        self.label.setText(text + " / ")
+        self.label.setText(self.label.text() + " / ")
+
+    def event_sin(self):
+        self.label.setText(self.label.text() + "sin(")
+
+    def event_cos(self):
+        self.label.setText(self.label.text() + "cos(")
+
+    def event_log(self):
+        self.label.setText(self.label.text() + "log(")
+
+    def event_ln(self):
+        self.label.setText(self.label.text() + "ln(")
+
+    def event_left_bracket(self):
+        self.label.setText(self.label.text() + "(")
+
+    def event_right_bracket(self):
+        self.label.setText(self.label.text() + ")")
 
     def event_point(self):
         text = self.label.text()
         try:
-            if text[-1] == ".":
+            if self.label.text()[-1] == ".":
                 pass
             else:
                 self.label.setText(f'{text}.')
@@ -67,53 +99,43 @@ class Main_window(QMainWindow):
             self.label.setText("Ошибка")
 
     def procent(self):
-        text = self.label.text()
-        self.label.setText(text + "%")
+        self.label.setText(self.label.text() + "%")
 
     def action1(self):
-        text = self.label.text()
-        self.label.setText(text + "1")
+        self.label.setText(self.label.text() + "1")
 
     def action2(self):
-        text = self.label.text()
-        self.label.setText(text + "2")
+        self.label.setText(self.label.text() + "2")
 
     def action3(self):
-        text = self.label.text()
-        self.label.setText(text + "3")
+        self.label.setText(self.label.text() + "3")
 
     def action4(self):
-        text = self.label.text()
-        self.label.setText(text + "4")
+        self.label.setText(self.label.text() + "4")
 
     def action5(self):
-        text = self.label.text()
-        self.label.setText(text + "5")
+        self.label.setText(self.label.text() + "5")
 
     def action6(self):
-        text = self.label.text()
-        self.label.setText(text + "6")
+        self.label.setText(self.label.text() + "6")
 
     def action7(self):
-        text = self.label.text()
-        self.label.setText(text + "7")
+        self.label.setText(self.label.text() + "7")
 
     def action8(self):
-        text = self.label.text()
-        self.label.setText(text + "8")
+        self.label.setText(self.label.text() + "8")
 
     def action9(self):
-        text = self.label.text()
-        self.label.setText(text + "9")
+        self.label.setText(self.label.text() + "9")
 
     def action0(self):
-        text = self.label.text()
-        self.label.setText(text + "0")
+        self.label.setText(self.label.text() + "0")
 
     def event_clear(self):
-        screen = self.label.text()
-        screen = screen[:-1]
-        self.label.setText(screen)
+        self.label.setText(self.label.text()[:-1])
+
+    def event_clear_all(self):
+        self.label.setText("")
 
     # Изменение с положительного / отрицательного
     def plus_minus(self):
@@ -122,10 +144,6 @@ class Main_window(QMainWindow):
             self.label.setText(screen.replace("-", ""))
         else:
             self.label.setText(f'-{screen}')
-
- 
-   # def sin_value(self):
-    #    return math.sin()
 
 
 if __name__ == "__main__":
