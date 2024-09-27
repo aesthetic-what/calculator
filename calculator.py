@@ -1,5 +1,6 @@
-import os
+import math
 import sys
+
 from PyQt5 import uic
 from PyQt5.QtWidgets import QApplication, QMainWindow
 
@@ -26,8 +27,9 @@ class Main_window(QMainWindow):
         self.actdiv.clicked.connect(self.event_div)
         self.actdel.clicked.connect(self.event_clear)
         self.acteqal.clicked.connect(self.event_equal)
-
-        self.hamster.clicked.connect(self.hamster_button)
+        self.pl_min.clicked.connect(self.plus_minus)
+        self.proc.clicked.connect(self.procent)
+        self.actpoint.clicked.connect(self.event_point)
 
     def event_equal(self):
         equation = self.label.text()
@@ -56,7 +58,17 @@ class Main_window(QMainWindow):
 
     def event_point(self):
         text = self.label.text()
-        self.label.setText(text + " . ")
+        try:
+            if text[-1] == ".":
+                pass
+            else:
+                self.label.setText(f'{text}.')
+        except IndexError:
+            self.label.setText("Ошибка")
+
+    def procent(self):
+        text = self.label.text()
+        self.label.setText(text + "%")
 
     def action1(self):
         text = self.label.text()
@@ -87,7 +99,6 @@ class Main_window(QMainWindow):
         self.label.setText(text + "7")
 
     def action8(self):
-
         text = self.label.text()
         self.label.setText(text + "8")
 
@@ -100,10 +111,21 @@ class Main_window(QMainWindow):
         self.label.setText(text + "0")
 
     def event_clear(self):
-        self.label.setText("")
+        screen = self.label.text()
+        screen = screen[:-1]
+        self.label.setText(screen)
 
-    def hamster_button(self):
-        os.system(r'python C:\Users\ZV\caculator\hamster_combat.py')
+    # Изменение с положительного / отрицательного
+    def plus_minus(self):
+        screen = self.label.text()
+        if "-" in screen:
+            self.label.setText(screen.replace("-", ""))
+        else:
+            self.label.setText(f'-{screen}')
+
+ 
+   # def sin_value(self):
+    #    return math.sin()
 
 
 if __name__ == "__main__":
